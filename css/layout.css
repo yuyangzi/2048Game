@@ -1,0 +1,68 @@
+/*头部样式*/
+header {
+    width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+header h1 {
+    font-family: Arial;
+    font-size: 50px;
+    margin-top:10px;
+    margin-bottom:10px;
+    font-weight: bold;
+}
+
+header button {
+    display: block;
+    width: 100px;
+    margin:15px auto;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-family: Arial;
+    color: white;
+    background-color: #8f7a66;
+    cursor: pointer;
+}
+
+header button:hover {
+    text-decoration: underline;
+    color: red;
+    background-color: #9f8b77;
+}
+
+header p {
+    width:100%;
+    margin: 15px auto;
+    font-size: 25px;
+    font-family: Arial;
+}
+
+/*头部样式结束*/
+
+/*grid_container开始*/
+.grid_container {
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*justify-content: space-between;*/
+    /*align-content: space-between;*/
+    width:460px;
+    height: 460px;
+    padding: 20px;
+    margin: 30px auto;
+    border-radius: 10px;
+    background-color: #bbada0;
+    position: relative;
+}
+
+.grid_cell {
+    width: 100px;
+    height: 100px;
+    border-radius: 6px;
+    background-color: #ccc0b3;
+    position: absolute;
+}
+
+
+/*grid_container结束*/
