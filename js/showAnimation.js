@@ -19,6 +19,15 @@ function showNumberWithAnimation(i, j, randNum) {
         "height": "100px",
         "top": getTop(i),
         "left": getLeft(j)
-    },50);
+    }, 50);
 
+}
+
+//设置格子移动动画效果
+function showMoveAnimation(fromX, fromY, toX, toY) {
+    var $theNumberCell = $("#number_cell_" + fromX + "_" + fromY);
+    $theNumberCell.animate({
+        "top": getTop(toX),
+        "left": getLeft(toY)
+    }, 200)
 }

@@ -4,7 +4,7 @@
 var board = [],
     score = 0;
 
-$(document).ready(function () {
+$(document).ready(function() {
     newGame();
 })
 
@@ -13,9 +13,6 @@ $("#newGameBtn").on("click", newGame);
 
 
 /********绑定事件结束*******/
-
-
-
 
 
 
@@ -84,6 +81,7 @@ function updateBoardView() {
     }
 }
 
+//在随机的位置上生成(2 || 4)随机数
 function generateOneNumber() {
     if (nospace(board)) return false;
 
@@ -91,7 +89,7 @@ function generateOneNumber() {
     var ranX = parseInt(Math.floor(Math.random() * 4));
     var ranY = parseInt(Math.floor(Math.random() * 4));
     while (true) {
-        if (board[ranX][ranY] == 0) break;
+        if (board[ranX][ranY] === 0) break;
 
         ranX = parseInt(Math.floor(Math.random() * 4));
         ranY = parseInt(Math.floor(Math.random() * 4));
@@ -101,7 +99,81 @@ function generateOneNumber() {
     var randNum = Math.random() < 0.5 ? 2 : 4;
 
     //在随机的位置上显示随机数
-    board[ranX][ranY] == randNum;
+    board[ranX][ranY] = randNum;
+    console.log(board[ranX][ranY]);
     showNumberWithAnimation(ranX, ranY, randNum);
 
+}
+
+$(document).on("keydown", function(event) {
+    /* Act on the event */
+    switch (event.keyCode) {
+
+        case 37: //left
+            if (moveLeft()) {
+                generateOneNumber();
+                isGameOver();
+            };
+            break;
+        case 38: //top
+            if (moveTop()) {
+                generateOneNumber();
+                isGameOver();
+            };
+            break;
+        case 39: //right
+            if (moveRight()) {
+                generateOneNumber();
+                isGameOver();
+            };
+            break;
+        case 40: //down
+            if (moveDown()) {
+                generateOneNumber();
+                isGameOver();
+            };
+            break;
+        default:
+            break;
+    }
+});
+
+
+function isGameOver() {
+
+}
+
+function moveLeft() {
+
+    //判断是否能够向左移动.
+    if (!canMoveLeft(board)) return false;
+
+    //moveLeft
+    for (var i = 0; i < 4; i++) {
+        for (var j = 1; j < 4; j++) {
+            if (board[i][j] != 0) {
+                for (var k = 0; k < j; k++) {
+                    if (board[i][k] == 0 && noBlockHorizontal(i, j, k, board)) {
+                        //move
+                        showMoveAnimation(i, j, i, k);
+                        board[i][k] = board[i][j];
+                        board[i][j] = 0;
+
+                        continue;
+                    } else if (board[i][k] == board[i][j] && noBlockHorizontal(i, j, k, board)) {
+                        //move
+                        showMoveAnimation(i, j, i, k);
+                        //add
+                        board[i][k] += board[i][j];
+                        board[i][j] = 0;
+
+                        continue
+                    }
+                }
+            }
+        }
+    }
+
+    setTimeout(updateBoardView,200) ;
+    return true;
 }
