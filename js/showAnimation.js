@@ -1,7 +1,6 @@
 /**
  * Created by 王宜明 on 2017/3/5.
  */
-
 //设置小格子显示数字时的动画效果.
 function showNumberWithAnimation(i, j, randNum) {
     //获取要传入数字的小格子
@@ -19,7 +18,7 @@ function showNumberWithAnimation(i, j, randNum) {
         "height": "100px",
         "top": getTop(i),
         "left": getLeft(j)
-    }, 50);
+    }, 100);
 
 }
 
@@ -30,4 +29,9 @@ function showMoveAnimation(fromX, fromY, toX, toY) {
         "top": getTop(toX),
         "left": getLeft(toY)
     }, 200)
+}
+
+//显示分数
+function updateScore(score) {
+    $("#score_number").text(score);
 }

@@ -16,43 +16,43 @@ function getNumberBackgroundColor(num) {
     switch (num) {
         case 2:
             return "#eee4ad";
-            braek;
+            break;
         case 4:
             return "#ede0c8";
-            braek;
+            break;
         case 8:
             return "#f2b179";
-            braek;
+            break;
         case 16:
             return "#f56593";
-            braek;
+            break;
         case 32:
             return "#f67c5f";
-            braek;
+            break;
         case 64:
             return "#f65e3b";
-            braek;
+            break;
         case 128:
             return "#edcf72";
-            braek;
+            break;
         case 256:
             return "#edcc61";
-            braek;
+            break;
         case 512:
             return "#99cc00";
-            braek;
+            break;
         case 1024:
             return "#33b5e5";
-            braek;
+            break;
         case 2048:
             return "#aa88ee";
-            braek;
+            break;
         case 4096:
             return "#66cc34";
-            braek;
+            break;
         case 8192:
             return "#224ac9";
-            braek;
+            break;
     }
     return "black";
 }
@@ -90,19 +90,6 @@ function canMoveLeft(board) {
     }
     return false;
 }
-
-//判断是否可以上移动.
-function canMoveTop(board) {
-    for (var i = 1; i < 4; i++) {
-        for (var j = 0; j < 4; j++) {
-            if (board[i][j] != 0) {
-                if (board[i - 1][j] == 0 || board[i - 1][j] == board[i][j]) return true;
-            }
-        }
-    }
-    return false;
-}
-
 //判断是否可以右移动.
 function canMoveRight(board) {
     for (var i = 0; i < 4; i++) {
@@ -115,10 +102,23 @@ function canMoveRight(board) {
     return false;
 }
 
+//判断是否可以上移动.
+function canMoveTop(board) {
+    for (var j = 0; j < 4; j++) {
+        for (var i = 1; i < 4; i++) {
+            if (board[i][j] != 0) {
+                if (board[i - 1][j] == 0 || board[i - 1][j] == board[i][j]) return true;
+            }
+        }
+    }
+    return false;
+}
+
+
 //判断是否可以下移动.
 function canMoveDown(board) {
-    for (var i = 2; i >= 0; i--) {
-        for (var j = 0; j < 4; j++) {
+    for (var j = 0; j < 4; j++) {
+        for (var i = 2; i >= 0; i--) {
             if (board[i][j] != 0) {
                 if (board[i + 1][j] == 0 || board[i + 1][j] == board[i][j]) return true;
             }
@@ -129,7 +129,6 @@ function canMoveDown(board) {
 
 
 /************************************判断是否可以移动************************************/
-
 
 
 /**********判断要移动的格子与目标位置之间是否有障碍物.*****************/
@@ -143,7 +142,7 @@ function noBlockHorizontal(row, col1, col2, board) {
 
 function noBlockVertical(col, row1, row2, board) {
     for (var i = row1 + 1; i < row2; i++) {
-        if (board[col][i] != 0) return false
+        if (board[i][col] != 0) return false
     }
 
     return true;
@@ -155,6 +154,5 @@ function nomove(board) {
     if (canMoveLeft(board) || canMoveRight(board) || canMoveTop(board) || canMoveDown(board)) {
         return false;
     }
-
     return true;
 }
