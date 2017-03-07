@@ -67,6 +67,7 @@ function updateBoardView() {
                     "left": getLeft(j) + "50px"
                 })
             } else {
+                //元素值不为0时的样式.
                 $theNumberCell.css({
                     "width": "100px",
                     "height": "100px",
@@ -105,32 +106,33 @@ function generateOneNumber() {
 
 }
 
+//给页面绑定"keydown"事件.使其按下方向键时执行对应操作.
 $(document).on("keydown", function(event) {
     /* Act on the event */
     switch (event.keyCode) {
 
         case 37: //left
-            if (moveLeft()) {
-                generateOneNumber();
-                isGameOver();
+            if (moveLeft("left")) {
+                setTimeout("generateOneNumber()", 210);
+                setTimeout("isGameOver()");
             };
             break;
         case 38: //top
             if (moveTop()) {
-                generateOneNumber();
-                isGameOver();
+                setTimeout("generateOneNumber()", 210);
+                setTimeout("isGameOver()", 210);
             };
             break;
         case 39: //right
-            if (moveRight()) {
-                generateOneNumber();
-                isGameOver();
+            if (moveRight("right")) {
+                setTimeout("generateOneNumber()", 210);
+                setTimeout("isGameOver()", 210);
             };
             break;
         case 40: //down
             if (moveDown()) {
-                generateOneNumber();
-                isGameOver();
+                setTimeout("generateOneNumber()", 210);
+                setTimeout("isGameOver()", 210);
             };
             break;
         default:
@@ -140,27 +142,41 @@ $(document).on("keydown", function(event) {
 
 
 function isGameOver() {
+    if (nospace(board) && nomove(board)) {
+        gameOver();
+    }
+}
 
+function gameOver() {
+    // alert("gameOver");
+    var gameOver = confirm("gameOver");
+    if (gameOver = true) {
+        newGame();
+    }else {
+        return false;
+    }
 }
 
 function moveLeft() {
-
-    //判断是否能够向左移动.
+    //判断是否能够移动.
     if (!canMoveLeft(board)) return false;
 
-    //moveLeft
+    //从左向右依次判断是否有格子可以向左移动.如果有则先移动,再进行下一次迭代
     for (var i = 0; i < 4; i++) {
         for (var j = 1; j < 4; j++) {
             if (board[i][j] != 0) {
+                //循环判断要移动格子的方向前的其它格子
                 for (var k = 0; k < j; k++) {
-                    if (board[i][k] == 0 && noBlockHorizontal(i, j, k, board)) {
+                    //判断其它格子的数值是否为0,且两者之间是否有障碍物.
+                    if (board[i][k] == 0 && noBlockHorizontal(i, k, j, board)) {
                         //move
                         showMoveAnimation(i, j, i, k);
                         board[i][k] = board[i][j];
                         board[i][j] = 0;
 
                         continue;
-                    } else if (board[i][k] == board[i][j] && noBlockHorizontal(i, j, k, board)) {
+                        //判断其它格子的数值与要移动的格子的数值是否相等,且两者之间是否有障碍物.
+                    } else if (board[i][k] == board[i][j] && noBlockHorizontal(i, k, j, board)) {
                         //move
                         showMoveAnimation(i, j, i, k);
                         //add
@@ -174,6 +190,120 @@ function moveLeft() {
         }
     }
 
-    setTimeout(updateBoardView,200) ;
+    setTimeout(updateBoardView, 200);
+    return true;
+}
+
+
+function moveTop() {
+    //判断是否能够移动.
+    if (!canMoveTop(board)) return false;
+
+    //从上向下依次判断是否有格子可以向上移动.如果有则先移动,再进行下一次迭代
+    for (var i = 1; i < 4; i++) {
+        for (var j = 0; j < 4; j++) {
+            if (board[i][j] != 0) {
+                //循环判断要移动格子的方向前的其它格子
+                for (var k = 0; k < i; k++) {
+                    //判断其它格子的数值是否为0,且两者之间是否有障碍物.
+                    if (board[k][j] == 0 && noBlockVertical(j, k, i, board)) {
+                        //move
+                        showMoveAnimation(i, j, k, j);
+                        noBlockHorizontal
+                        board[k][j] = board[i][j];
+                        board[i][j] = 0;
+
+                        continue;
+                        //判断其它格子的数值与要移动的格子的数值是否相等,且两者之间是否有障碍物.
+                    } else if (board[k][j] == board[i][j] && noBlockVertical(j, k, i, board)) {
+                        //move
+                        showMoveAnimation(i, j, k, j);
+                        //add
+                        board[k][j] += board[i][j];
+                        board[i][j] = 0;
+
+                        continue
+                    }
+                }
+            }
+        }
+    }
+
+    setTimeout(updateBoardView, 200);
+    return true;
+}
+
+
+function moveRight() {
+    //判断是否能够移动.
+    if (!canMoveRight(board)) return false;
+
+    //从右向左依次判断是否有格子可以向右移动.如果有则先移动,再进行下一次迭代
+    for (var i = 0; i < 4; i++) {
+        for (var j = 2; j >= 0; j--) {
+            if (board[i][j] != 0) {
+                //循环判断要移动格子的方向前的其它格子
+                for (var k = 3; k > j; k--) {
+                    //判断其它格子的数值是否为0,且两者之间是否有障碍物.
+                    if (board[i][k] == 0 && noBlockHorizontal(i, k, j, board)) {
+                        //move
+                        showMoveAnimation(i, j, i, k);
+                        board[i][k] = board[i][j];
+                        board[i][j] = 0;
+
+                        continue;
+                        //判断其它格子的数值与要移动的格子的数值是否相等,且两者之间是否有障碍物.
+                    } else if (board[i][k] == board[i][j] && noBlockHorizontal(i, k, j, board)) {
+                        //move
+                        showMoveAnimation(i, j, i, k);
+                        //add
+                        board[i][k] += board[i][j];
+                        board[i][j] = 0;
+
+                        continue
+                    }
+                }
+            }
+        }
+    }
+
+    setTimeout(updateBoardView, 200);
+    return true;
+}
+
+function moveDown() {
+    //判断是否能够移动.
+    if (!canMoveDown(board)) return false;
+
+    //从下向上依次判断是否有格子可以向下移动.如果有则先移动,再进行下一次迭代
+    for (var i = 2; i >= 0; i--) {
+        for (var j = 0; j < 4; j++) {
+            if (board[i][j] != 0) {
+                //循环判断要移动格子的方向前的其它格子
+                for (var k = 3; k > i; k--) {
+                    //判断其它格子的数值是否为0,且两者之间是否有障碍物.
+                    if (board[k][j] == 0 && noBlockVertical(j, k, i, board)) {
+                        //move
+                        showMoveAnimation(i, j, k, j);
+                        board[k][j] = board[i][j];
+                        board[i][j] = 0;
+
+                        continue;
+                        //判断其它格子的数值与要移动的格子的数值是否相等,且两者之间是否有障碍物.
+                    } else if (board[k][j] == board[i][j] && noBlockVertical(j, k, i, board)) {
+                        //move
+                        showMoveAnimation(i, j, k, j);
+                        //add
+                        board[k][j] += board[i][j];
+                        board[i][j] = 0;
+
+                        continue
+                    }
+                }
+            }
+        }
+    }
+
+    setTimeout(updateBoardView, 200);
     return true;
 }

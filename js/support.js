@@ -78,28 +78,83 @@ function nospace(board) {
 }
 
 
-//判断是否可以移动.
+/************************************判断是否可以移动************************************/
+//判断是否可以左移动.
 function canMoveLeft(board) {
     for (var i = 0; i < 4; i++) {
         for (var j = 1; j < 4; j++) {
             if (board[i][j] != 0) {
-                if (board[i][j - 1] == 0 || board[i][j - 1] == board[i][j]) {
-                    return true;
-                }
+                if (board[i][j - 1] == 0 || board[i][j - 1] == board[i][j]) return true;
             }
         }
     }
+    return false;
+}
 
+//判断是否可以上移动.
+function canMoveTop(board) {
+    for (var i = 1; i < 4; i++) {
+        for (var j = 0; j < 4; j++) {
+            if (board[i][j] != 0) {
+                if (board[i - 1][j] == 0 || board[i - 1][j] == board[i][j]) return true;
+            }
+        }
+    }
+    return false;
+}
+
+//判断是否可以右移动.
+function canMoveRight(board) {
+    for (var i = 0; i < 4; i++) {
+        for (var j = 2; j >= 0; j--) {
+            if (board[i][j] != 0) {
+                if (board[i][j + 1] == 0 || board[i][j + 1] == board[i][j]) return true;
+            }
+        }
+    }
+    return false;
+}
+
+//判断是否可以下移动.
+function canMoveDown(board) {
+    for (var i = 2; i >= 0; i--) {
+        for (var j = 0; j < 4; j++) {
+            if (board[i][j] != 0) {
+                if (board[i + 1][j] == 0 || board[i + 1][j] == board[i][j]) return true;
+            }
+        }
+    }
     return false;
 }
 
 
-//判断要移动的格子与目标位置之间是否有障碍物.
+/************************************判断是否可以移动************************************/
+
+
+
+/**********判断要移动的格子与目标位置之间是否有障碍物.*****************/
 function noBlockHorizontal(row, col1, col2, board) {
     for (var i = col1 + 1; i < col2; i++) {
         if (board[row][i] != 0) return false
     }
 
     return true;
+}
 
+function noBlockVertical(col, row1, row2, board) {
+    for (var i = row1 + 1; i < row2; i++) {
+        if (board[col][i] != 0) return false
+    }
+
+    return true;
+}
+
+/**********判断要移动的格子与目标位置之间是否有障碍物.*****************/
+
+function nomove(board) {
+    if (canMoveLeft(board) || canMoveRight(board) || canMoveTop(board) || canMoveDown(board)) {
+        return false;
+    }
+
+    return true;
 }
