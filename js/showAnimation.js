@@ -14,8 +14,8 @@ function showNumberWithAnimation(i, j, randNum) {
 
     //设置动画效果
     $theNumberCell.animate({
-        "width": "100px",
-        "height": "100px",
+        "width": cellSideLength,
+        "height": cellSideLength,
         "top": getTop(i),
         "left": getLeft(j)
     }, 100);

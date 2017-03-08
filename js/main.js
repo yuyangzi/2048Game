@@ -1,11 +1,16 @@
 /**
  * Created by 王宜明 on 2017/3/5.
  */
-var board = [];
-var score = 0;
-var hasConflicted = [];
+var board = [],
+    hasConflicted = [],
+    score = 0,
+    startX,
+    startY,
+    endX,
+    endY;
 
 $(document).ready(function () {
+    prepareForMobile();
     newGame();
 });
 
@@ -15,7 +20,26 @@ $("#newGameBtn").on("click", newGame);
 
 /********绑定事件结束*******/
 
+function prepareForMobile() {
+    if (documentWidth > 500) {
+        gridContainerWidth = 500;
+        cellSideLength = 100;
+        cellSpace = 20;
+    }
+    //初始化CSS样式.实现响应式设计.
+    $(".grid_container").css({
+        "width": gridContainerWidth - 2 * cellSpace,
+        "height": gridContainerWidth - 2 * cellSpace,
+        "padding": cellSpace,
+        "borderRadius": 0.02 * gridContainerWidth
+    });
 
+    $(".grid_cell").css({
+        "width": cellSideLength,
+        "height": cellSideLength
+        // "borderRadius" : 0.02*cellSideLength
+    })
+}
 
 function newGame() {
     // 初始化棋盘格
@@ -67,16 +91,17 @@ function updateBoardView() {
             //元素的值为0时的样式
             if (board[i][j] == 0) {
                 $theNumberCell.css({
-                    "width": "0px",
-                    "height": "0px",
-                    "top": getTop(i) + "50px",
-                    "left": getLeft(j) + "50px"
+                    "width": "0",
+                    "height": "0",
+                    "top": getTop(i) + cellSideLength / 2,
+                    "left": getLeft(j) + cellSideLength / 2
                 })
             } else {
                 //元素值不为0时的样式.
                 $theNumberCell.css({
-                    "width": "100px",
-                    "height": "100px",
+                    "width": cellSideLength,
+                    "height": cellSideLength,
+                    "lineHeight" :cellSideLength,
                     "top": getTop(i),
                     "left": getLeft(j),
                     "background-color": getNumberBackgroundColor(board[i][j]),
@@ -87,6 +112,10 @@ function updateBoardView() {
             hasConflicted[i][j] = false;
         }
     }
+    $(".number_cell").css({
+        "line-height": cellSideLength,
+        "fontSize": 0.6 * cellSideLength
+    })
 }
 
 //在随机的位置上生成(2 || 4)随机数
@@ -121,35 +150,37 @@ function generateOneNumber() {
 
     //在随机的位置上显示随机数
     board[ranX][ranY] = randNum;
-    console.log(board[ranX][ranY]);
     showNumberWithAnimation(ranX, ranY, randNum);
 
 }
 
 //给页面绑定"keydown"事件.使其按下方向键时执行对应操作.
 $(document).on("keydown", function (event) {
-    /* Act on the event */
+    event.preventDefault();
     switch (event.keyCode) {
-
         case 37: //left
+            event.preventDefault();
             if (moveLeft()) {
                 setTimeout("generateOneNumber()", 210);
                 setTimeout("isGameOver()", 500);
             }
             break;
         case 38: //top
+            event.preventDefault();
             if (moveTop()) {
                 setTimeout("generateOneNumber()", 210);
                 setTimeout("isGameOver()", 500);
             }
             break;
         case 39: //right
+            event.preventDefault();
             if (moveRight()) {
                 setTimeout("generateOneNumber()", 210);
                 setTimeout("isGameOver()", 500);
             }
             break;
         case 40: //down
+            event.preventDefault();
             if (moveDown()) {
                 setTimeout("generateOneNumber()", 210);
                 setTimeout("isGameOver()", 500);
@@ -160,13 +191,58 @@ $(document).on("keydown", function (event) {
     }
 });
 
+//针对移动端的触摸事件.进行配置.
+document.addEventListener("touchstart", function (event) {
+    startX = event.touches[0].pageX;
+    startY = event.touches[0].pageY;
+});
 
+document.addEventListener("touchmove",function (event) {
+    event.preventDefault();
+})
+
+document.addEventListener("touchend", function (event) {
+    endX = event.changedTouches[0].pageX;
+    endY = event.changedTouches[0].pageY;
+
+    var subtractX = endX - startX;
+    var subtractY = endY - startY;
+
+    if (Math.abs(subtractX) >= Math.abs(subtractY)) {
+        if (subtractX > 0) {
+            if (moveRight()) {
+                setTimeout("generateOneNumber()", 210);
+                setTimeout("isGameOver()", 500);
+            }
+        } else {
+            if (moveLeft()) {
+                setTimeout("generateOneNumber()", 210);
+                setTimeout("isGameOver()", 500);
+            }
+        }
+    } else {
+        if (subtractY > 0) {
+            if (moveDown()) {
+                setTimeout("generateOneNumber()", 210);
+                setTimeout("isGameOver()", 500);
+            }
+        } else {
+            if (moveTop()) {
+                setTimeout("generateOneNumber()", 210);
+                setTimeout("isGameOver()", 500);
+            }
+        }
+    }
+});
+
+//判断是否结束游戏.
 function isGameOver() {
     if (nospace(board) && nomove(board)) {
         gameOver();
     }
 }
 
+//结束游戏
 function gameOver() {
     alert("gameOver");
     newGame();
