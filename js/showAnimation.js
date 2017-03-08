@@ -14,10 +14,10 @@ function showNumberWithAnimation(i, j, randNum) {
 
     //设置动画效果
     $theNumberCell.animate({
-        "width": cellSideLength,
-        "height": cellSideLength,
-        "top": getTop(i),
-        "left": getLeft(j)
+        "width": "10rem",
+        "height": "10rem",
+        "top": getTop(i) +"rem",
+        "left": getLeft(j) +"rem"
     }, 100);
 
 }
@@ -26,8 +26,8 @@ function showNumberWithAnimation(i, j, randNum) {
 function showMoveAnimation(fromX, fromY, toX, toY) {
     var $theNumberCell = $("#number_cell_" + fromX + "_" + fromY);
     $theNumberCell.animate({
-        "top": getTop(toX),
-        "left": getLeft(toY)
+        "top": getTop(toX) + "rem",
+        "left": getLeft(toY) + "rem"
     }, 200)
 }
 

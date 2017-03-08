@@ -10,7 +10,6 @@ var board = [],
     endY;
 
 $(document).ready(function () {
-    prepareForMobile();
     newGame();
 });
 
@@ -19,28 +18,6 @@ $("#newGameBtn").on("click", newGame);
 
 
 /********绑定事件结束*******/
-
-function prepareForMobile() {
-    if (documentWidth > 500) {
-        gridContainerWidth = 500;
-        cellSideLength = 100;
-        cellSpace = 20;
-    }
-    //初始化CSS样式.实现响应式设计.
-    $(".grid_container").css({
-        "width": gridContainerWidth - 2 * cellSpace,
-        "height": gridContainerWidth - 2 * cellSpace,
-        "padding": cellSpace,
-        "borderRadius": 0.02 * gridContainerWidth
-    });
-
-    $(".grid_cell").css({
-        "width": cellSideLength,
-        "height": cellSideLength
-        // "borderRadius" : 0.02*cellSideLength
-    })
-}
-
 function newGame() {
     // 初始化棋盘格
     init();
@@ -52,18 +29,7 @@ function newGame() {
 //初始化
 function init() {
     //获取到每一个小格子.设置它们相应的位置.
-    var i = 0;
-    var j = 0;
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 4; j++) {
-            var gridCell = $("#grid_cell_" + i + "_" + j);
-            gridCell.css({
-                "top": getTop(i),
-                "left": getLeft(j)
-            })
-        }
-    }
-
+    var i = 0,j = 0;
     //初始化数组中所有的值为0
     for (i = 0; i < 4; i++) {
         board[i] = [];
@@ -93,17 +59,16 @@ function updateBoardView() {
                 $theNumberCell.css({
                     "width": "0",
                     "height": "0",
-                    "top": getTop(i) + cellSideLength / 2,
-                    "left": getLeft(j) + cellSideLength / 2
+                    "top": getTop(i) + '5rem',
+                    "left": getLeft(j) + '5rem'
                 })
             } else {
                 //元素值不为0时的样式.
                 $theNumberCell.css({
-                    "width": cellSideLength,
-                    "height": cellSideLength,
-                    "lineHeight" :cellSideLength,
-                    "top": getTop(i),
-                    "left": getLeft(j),
+                    "width": "10rem",
+                    "height": "10rem",
+                    "top": getTop(i) + "rem",
+                    "left": getLeft(j) + "rem",
                     "background-color": getNumberBackgroundColor(board[i][j]),
                     "color": getNumberColr(board[i][j])
                 });
@@ -112,38 +77,25 @@ function updateBoardView() {
             hasConflicted[i][j] = false;
         }
     }
-    $(".number_cell").css({
-        "line-height": cellSideLength,
-        "fontSize": 0.6 * cellSideLength
-    })
 }
 
 //在随机的位置上生成(2 || 4)随机数
 function generateOneNumber() {
     if (nospace(board)) return false;
-
-    // 随机一个位置
-    var ranX = parseInt(Math.floor(Math.random() * 4));
-    var ranY = parseInt(Math.floor(Math.random() * 4));
-    var times = 0;
-    while (times < 50) {
-        if (board[ranX][ranY] === 0) break;
-
-        ranX = parseInt(Math.floor(Math.random() * 4));
-        ranY = parseInt(Math.floor(Math.random() * 4));
-
-        times++;
-    }
-    if (times == 50) {
-        for (var i = 0; i < 4; i++) {
-            for (var j = 1; j < 4; j++) {
-                if (board[i][j] == 0) {
-                    ranX = i;
-                    ranY = j;
-                }
+    var ran = [];
+    //获取所有的空格,并传入数组ran中.
+    for (var i = 0; i < 4; i++) {
+        for (var j = 0; j < 4; j++) {
+            if (board[i][j] == 0) {
+                var XY = [i, j];
+                ran.push(XY);
             }
         }
     }
+    // 随机一个位置
+    var randomNumber = parseInt(Math.floor(Math.random() * ran.length));
+    ranX = ran[randomNumber][0];
+    ranY = ran[randomNumber][1];
 
     //随机一个数
     var randNum = Math.random() < 0.5 ? 2 : 4;
@@ -197,9 +149,9 @@ document.addEventListener("touchstart", function (event) {
     startY = event.touches[0].pageY;
 });
 
-document.addEventListener("touchmove",function (event) {
-    event.preventDefault();
-})
+// document.addEventListener("touchmove", function (event) {
+//     event.preventDefault();
+// })
 
 document.addEventListener("touchend", function (event) {
     endX = event.changedTouches[0].pageX;
@@ -207,6 +159,8 @@ document.addEventListener("touchend", function (event) {
 
     var subtractX = endX - startX;
     var subtractY = endY - startY;
+
+    if (Math.abs(subtractX) < 10 && Math.abs(subtractY) < 10) return;
 
     if (Math.abs(subtractX) >= Math.abs(subtractY)) {
         if (subtractX > 0) {

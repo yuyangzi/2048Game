@@ -1,19 +1,15 @@
 /**
  * Created by 王宜明 on 2017/3/5.
  */
-documentWidth = window.screen.availWidth;
-gridContainerWidth = 0.92 * documentWidth;
-cellSideLength = 0.18 * documentWidth;
-cellSpace = 0.04 * documentWidth;
-
 //判断元素的top值
 function getTop(i) {
-    return cellSpace + i*(cellSideLength + cellSpace);
+    return 2 + i * 12;
 }
 
 //判断元素的left值
 function getLeft(j) {
-    return cellSpace + j*(cellSideLength + cellSpace);
+    return 2 + j * 12;
+
 }
 
 //根据元素的数值设置背景颜色
